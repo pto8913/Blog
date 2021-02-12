@@ -7,25 +7,36 @@
 
 #include "TimerManager.h"
 
-void UMessageContentsBase::OpenUI()
+void UMessageContentsWidget::OpenUI()
 {
-	HBs = { ContentHB_Row1, ContentHB_Row2, ContentHB_Row3, ContentHB_Row4 };
-
 	if (Contents.IsEmpty()) return;
 
 	SetupStringChar(Contents);
 }
 
-void UMessageContentsBase::StopTyping()
+void UMessageContentsWidget::CloseUI()
 {
-	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
-	CloseUI();
+	StopTyping();
 }
 
-void UMessageContentsBase::BeginTyping()
+void UMessageContentsWidget::StopTyping()
+{
+	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
+	for (UWidget* Elem : ContentVB)
+	{
+		UHorizontalBox* HB = Cast<UHorizontalBox>(Elem);
+		HB->ClearChildren();
+	}
+	ContentVB->ClearChildren();
+	Contents.Empty();
+	TextBlocks.Empty();
+	CurrentHB = nullptr;
+}
+
+void UMessageContentsWidget::BeginTyping()
 {
 	GetWorld()->GetTimerManager().SetTimer(
-		TimerHandle, this, &UMessageContentsBase::BeginTyping, TypingSpeed, false
+		TimerHandle, this, &UMessageContentsWidget::BeginTyping, TypingSpeed, false
 	);
 
 	if (TextBlocks.IsValidIndex(TypingPoint) == true)
@@ -50,7 +61,7 @@ void UMessageContentsBase::BeginTyping()
 	}
 }
 
-void UMessageContentsBase::GenerateTextBlock(const FString& In)
+void UMessageContentsWidget::GenerateTextBlock(const FString& In)
 {
 	for (int32 Idx = 0; Idx < In.Len(); ++Idx)
 	{
@@ -72,31 +83,23 @@ void UMessageContentsBase::GenerateTextBlock(const FString& In)
 	}
 }
 
-TArray<FString> UMessageContentsBase::SplitLines(FString& In)
+TArray<FString> UMessageContentsWidget::SplitLines(FString& In)
 {
 	TArray<FString> Res;
 	In.ParseIntoArray(Res, TEXT("-"));
 	return Res;
 }
 
-void UMessageContentsBase::SetupStringChar(FString& In)
+void UMessageContentsWidget::SetupStringChar(FString& In)
 {
 	int Idx = 0;
 	for (const FString& Elem : SplitLines(In))
 	{
-		CurrentHB = HBs[Idx];
+		CurrentHB = NewObject<UHorizontalBox>();
+		ContentVB->AddChild(CurrentHB);
 		GenerateTextBlock(Elem);
 		++Idx;
 	}
 	BeginTyping();
 }
 
-void UMessageContentsBase::CloseUI()
-{
-	for (UHorizontalBox*& Elem : HBs)
-	{
-		Elem->ClearChildren();
-	}
-	HBs.Empty();
-	Contents.Empty();
-}
