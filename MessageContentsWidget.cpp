@@ -68,7 +68,6 @@ void UMessageContentsWidget::GenerateTextBlock(const FString& In)
 		UTextBlock* NewTextBlock = NewObject<UTextBlock>();
 		if (Font.HasValidFont())
 		{
-			Font.Size = FontSize;
 			NewTextBlock->SetFont(Font);
 		}
 		NewTextBlock->SetText(
