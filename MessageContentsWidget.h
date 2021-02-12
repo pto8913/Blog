@@ -17,8 +17,8 @@ class PTOPROJECT_API UMessageContentsBase : public UserWidget
 public:
 	UFUNCTION(BlueprintCallable, Category = "pto")
 		virtual void OpenUI();
-  UFUNCTION(BlueprintCallable, Category = "pto")
-  	virtual void CloseUI();
+	UFUNCTION(BlueprintCallable, Category = "pto")
+  		virtual void CloseUI();
 
 	/*
 		The new line is a "-"
