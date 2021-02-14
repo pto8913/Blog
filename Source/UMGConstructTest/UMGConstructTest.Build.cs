@@ -1,0 +1,19 @@
+// Copyright Epic Games, Inc. All Rights Reserved.
+
+using UnrealBuildTool;
+
+public class UMGConstructTest : ModuleRules
+{
+	public UMGConstructTest(ReadOnlyTargetRules Target) : base(Target)
+	{
+		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
+
+		PublicDependencyModuleNames.AddRange(new string[] {
+			"Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay",
+		});
+
+		PrivateDependencyModuleNames.AddRange(new string[] {
+			"UMG", "Slate", "SlateCore", "UnrealEd", "BlueprintGraph"
+		});
+	}
+}
