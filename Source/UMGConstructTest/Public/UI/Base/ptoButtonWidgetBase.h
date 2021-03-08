@@ -54,4 +54,5 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, Category = "pto")
 		UTextBlock* CreatedText;
+
 };
